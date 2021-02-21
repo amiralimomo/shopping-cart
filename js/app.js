@@ -10,6 +10,7 @@ function eventListeners() {
     shoppingCartContent.addEventListener('click', removeCart)
     btnClearCart.addEventListener('click', clearCart)
     window.addEventListener('DOMContentLoaded',loadCart)
+   
 }
 
 // functions
@@ -29,8 +30,8 @@ function getCourseInfo(course) {
         id: course.querySelectorAll('a')[1].getAttribute('data-id')
     }
     addToCart(courseInfo)
-    
-    addToLS(courseInfo)
+    coursesLS.push(courseInfo)
+    saveToLS()
 }
 function addToCart(courseInfo) {
     const row = document.createElement('tr')
@@ -50,14 +51,21 @@ function addToCart(courseInfo) {
 
 }
 function removeCart(e) {
+    const getIndex= coursesLS.findIndex((item,index)=>{
+       return  item.id===e.target.getAttribute('data-id')
+    })
+    coursesLS.splice(getIndex,1)
+    saveToLS()
     if (e.target.classList.contains('remove')) {
         e.target.parentElement.parentElement.remove()
     }
+  
 }
 function clearCart() {
     while (shoppingCartContent.firstChild) {
         shoppingCartContent.firstChild.remove()
     }
+    clearLS()
 }
 getDataFromLS()
 function getDataFromLS() {
@@ -65,8 +73,7 @@ function getDataFromLS() {
         coursesLS = JSON.parse(localStorage.getItem('courses'))
     }
 }
-function addToLS(course) {
-    coursesLS.push(course)
+function saveToLS() { 
     localStorage.setItem('courses', JSON.stringify(coursesLS))
 }
 function loadCart(){
@@ -74,4 +81,8 @@ function loadCart(){
     coursesLS.forEach((item,index)=>{
         addToCart(item)
     })
+}
+function clearLS(){
+localStorage.clear()
+coursesLS=[]
 }
