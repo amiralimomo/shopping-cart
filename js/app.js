@@ -1,12 +1,13 @@
 // variables
 const courses = document.querySelector('#courses-list')
 const shoppingCartContent = document.querySelector('#cart-content tbody')
-
+const btnClearCart=document.querySelector('#clear-cart')
 // eventListeners
 eventListeners()
 function eventListeners() {
     courses.addEventListener('click', buyCourse)
     shoppingCartContent.addEventListener('click', removeCart)
+    btnClearCart.addEventListener('click',clearCart)
 }
 
 // functions
@@ -47,5 +48,10 @@ function addToCart(courseInfo) {
 function removeCart(e) {
     if (e.target.classList.contains('remove')) {
         e.target.parentElement.parentElement.remove()
+    }
+}
+function clearCart(){
+    while(shoppingCartContent.firstChild){
+        shoppingCartContent.firstChild.remove()
     }
 }
