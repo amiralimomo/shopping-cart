@@ -1,13 +1,15 @@
 // variables
 const courses = document.querySelector('#courses-list')
 const shoppingCartContent = document.querySelector('#cart-content tbody')
-const btnClearCart=document.querySelector('#clear-cart')
+const btnClearCart = document.querySelector('#clear-cart')
+let coursesLS = []
 // eventListeners
 eventListeners()
 function eventListeners() {
     courses.addEventListener('click', buyCourse)
     shoppingCartContent.addEventListener('click', removeCart)
-    btnClearCart.addEventListener('click',clearCart)
+    btnClearCart.addEventListener('click', clearCart)
+    window.addEventListener('DOMContentLoaded',loadCart)
 }
 
 // functions
@@ -27,6 +29,8 @@ function getCourseInfo(course) {
         id: course.querySelectorAll('a')[1].getAttribute('data-id')
     }
     addToCart(courseInfo)
+    
+    addToLS(courseInfo)
 }
 function addToCart(courseInfo) {
     const row = document.createElement('tr')
@@ -50,8 +54,24 @@ function removeCart(e) {
         e.target.parentElement.parentElement.remove()
     }
 }
-function clearCart(){
-    while(shoppingCartContent.firstChild){
+function clearCart() {
+    while (shoppingCartContent.firstChild) {
         shoppingCartContent.firstChild.remove()
     }
+}
+getDataFromLS()
+function getDataFromLS() {
+    if (localStorage.getItem('courses')) {
+        coursesLS = JSON.parse(localStorage.getItem('courses'))
+    }
+}
+function addToLS(course) {
+    coursesLS.push(course)
+    localStorage.setItem('courses', JSON.stringify(coursesLS))
+}
+function loadCart(){
+    getDataFromLS()
+    coursesLS.forEach((item,index)=>{
+        addToCart(item)
+    })
 }
